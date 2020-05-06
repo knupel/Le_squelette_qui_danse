@@ -4,16 +4,37 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
+  - master
 
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: truc Bonjour tout le monde !
-  displayName: 'Run a one-line script'
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  - script: |
+      yarn install
+      yarn build
+    displayName: 'Build'
+    env:
+      CI: true
+
+  - script: yarn test --coverage --ci --reporters=default --reporters=jest-junit
+    displayName: 'Test'
+    env:
+      CI: true
+
+  - task: PublishTestResults@1
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/junit*.xml'
+
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: 'Cobertura'
+      summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
+      reportDirectory: '$(System.DefaultWorkingDirectory)/coverage/lcov-report'
+      pathToSources: '$(System.DefaultWorkingDirectory)/src'
