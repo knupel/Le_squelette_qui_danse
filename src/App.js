@@ -39,7 +39,7 @@ function Machin() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Le Codid 19 c'est pas top!!!
+          Le Codid 19 c'est pas top mais il faut faire avec!!!
         </a>
       </header>
     </div>
