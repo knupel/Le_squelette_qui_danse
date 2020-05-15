@@ -10,24 +10,32 @@ jobs:
       - node/with-cache:
           steps:
             - run: npm install
-            - run: npm test
+    #      - run: npm test
+            - run:
+              name: "Run Jest and Collect Coverage Reports"
+              command: jest --collectCoverage=true
+           - store_artifacts:
+              path: coverage
 
-      - run: yarn test --coverage --ci --reporters=default --reporters=jest-junit
-        displayName: 'Test'
-        env:
-          CI: true
+      
 
-      - task: PublishTestResults@1
-        inputs:
-          testResultsFormat: 'JUnit'
-          testResultsFiles: '**/junit*.xml'
 
-      - task: PublishCodeCoverageResults@1
-        inputs:
-          codeCoverageTool: 'Cobertura'
-          summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
-          reportDirectory: '$(System.DefaultWorkingDirectory)/coverage/lcov-report'
-          pathToSources: '$(System.DefaultWorkingDirectory)/src'
+
+
+      # - run: yarn test --coverage --ci --reporters=default --reporters=jest-junit
+      #   displayName: 'Test'
+      #   env:
+      #     CI: true
+      # - task: PublishTestResults@1
+      #   inputs:
+      #     testResultsFormat: 'JUnit'
+      #     testResultsFiles: '**/junit*.xml'
+      # - task: PublishCodeCoverageResults@1
+      #   inputs:
+      #     codeCoverageTool: 'Cobertura'
+      #     summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
+      #     reportDirectory: '$(System.DefaultWorkingDirectory)/coverage/lcov-report'
+      #     pathToSources: '$(System.DefaultWorkingDirectory)/src'
 
 workflows:
   build-and-test:
